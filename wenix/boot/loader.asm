@@ -81,11 +81,11 @@ LABEL_LOADED:
     call kill_motor
 
 ;; 准备进入保护模式
-    xor eax, eax
-    mov ax, ds
-    shl eax, 4
-    add eax, LABEL_GDT
-    mov dword [gdt_ptr+2], eax    
+    ; xor eax, eax
+    ; mov ax, ds
+    ; shl eax, 4
+    ; add eax, LABEL_GDT
+    ; mov dword [gdt_ptr+2], eax    
     lgdt [gdt_ptr]
     cli
     in al, 0x92

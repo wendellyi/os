@@ -4,13 +4,10 @@
  * (C) 2014 Wendell Yi
  */
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <wenix/kernel.h>
+#include <string.h>
+#include <wenix/system.h>
 
 static char buffer[1024];
-
-extern int vsprintf(char * buffer, const char * fmt, va_list args);
 
 int printk(const char * fmt, ...)
 {
@@ -20,7 +17,7 @@ int printk(const char * fmt, ...)
     va_start(args, fmt);
     i = vsprintf(buffer, fmt, args);
     va_end(args);
-    console_print(buffer);
+    print_string(buffer);
     return i;
 }
 

@@ -1,11 +1,10 @@
 /*
- * wenix/kernel/vsprintf.c
+ * wenix/lib/vsprintf.c
  */
 
 #include <stdarg.h>
 #include <string.h>
-
-#define isdigit(c) ((c) >= '0' && (c) <= '9')
+#include <stdlib.h>
 
 #define ZEROPAD     1
 #define SIGN        2
@@ -131,11 +130,13 @@ static char * number(
 
 int vsprintf(char * buffer, const char * fmt, va_list args)
 {
-    char * str;
+    char *str, *s;
     int flags;
     int field_width;
     int precision;
-    int qualifier = -1;
+    //int qualifier;
+    int *ip;                    /* 为%n使用的 */
+    int len, i;
 
     for (str = buffer; *fmt; fmt++)
     {
@@ -211,17 +212,18 @@ int vsprintf(char * buffer, const char * fmt, va_list args)
                 precision = 0;
         }
 
-        /* 获取转换 */
-        qualifier = 0;
+        /* 获取长度修饰符 */
+        //qualifier = 0;
         if ('h' == *fmt || 'l' == *fmt || 'L' == *fmt)
         {
-            qualifier = *fmt;
+            //qualifier = *fmt;
             fmt++;
         }
 
+        /* 分析转换修饰符 */
         switch (*fmt)
         {
-        case 'c':
+        case 'c':                /* 以字符的方式打印 */
             if (!(flags & LEFT)) /* 没有左对齐 */
                 while (--field_width > 0)
                     *str++ = ' ';
@@ -231,7 +233,7 @@ int vsprintf(char * buffer, const char * fmt, va_list args)
                 *str++ = ' ';
             break;
 
-        case 's':
+        case 's':               /* 以字符串的方式打印 */
             s = va_arg(args, char *);
             len = strlen(s);
             if (precision < 0)
@@ -248,32 +250,44 @@ int vsprintf(char * buffer, const char * fmt, va_list args)
                 *str++ = ' ';
             break;
 
-        case 'o':
-            str = number
+        case 'o':               /* 以八进制的方式打印 */
+            str = number(str, va_arg(args, unsigned long), 8, field_width, precision, flags);
             break;
 
-        case 'p':
+        case 'p':               /* 以指针的方式打印 */
+            if (0 == field_width)
+            {
+                field_width = 8;
+                flags |= ZEROPAD;
+            }
+            str = number(str, (unsigned long)va_arg(args, void *), 16, field_width, precision, flags);
             break;
 
-        case 'x':
-            break;
-
+        case 'x':               /* 以十六进制得方式打印 */
+            flags |= SMALL;
         case 'X':
+            str = number(str, va_arg(args, unsigned long), 16, field_width, precision, flags);
             break;
 
         case 'd':
-            break;
-
         case 'i':
-            break;
-
+            flags |= SIGN;
         case 'u':
+            str = number(str, va_arg(args, unsigned long), 10, field_width, precision, flags);
             break;
 
-        case 'n':
+        case 'n':               /* 表示需要保存当前已有字符串的长度到对应的指针上 */
+            ip = va_arg(args, int *);
+            *ip = (str-buffer);
             break;
 
         default:
+            if (*fmt != '%')    /* 到这里如果不是百分号，那么一定是出错了 */
+                *str++ = '%';
+            if (*fmt)
+                *str++ = *fmt;
+            else                /* 这里表示已经到头了 */
+                --fmt;
             break;
         } /* end switch */
     } /* end for */

@@ -22,4 +22,9 @@
 #define INT_S_CTL               0xa0
 #define INT_S_CTL_MASK          0xa1
 
+
+
+/* 字符的颜色 */
+#define CHAR_COLOR_DEFAULT      0x0c
+
 #endif /* _WENIX_CONST_H */

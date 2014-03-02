@@ -1,6 +1,7 @@
 SELECTOR_KERNEL_CS equ 8
 
 extern exception_handler
+extern spurious_irq
 
 [section .text]
 global	divide_error
@@ -149,11 +150,11 @@ device_not_available:
 double_fault:
     push 8
     jmp exception
-copr_seg_overrun:
+coprocessor_segment_overrun:
     push 0xffffffff
     push 9
     jmp exception
-inval_tss:
+invalid_tss:
     push 10
     jmp exception
 segment_not_present:

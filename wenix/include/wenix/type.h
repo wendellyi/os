@@ -1,11 +1,11 @@
 #ifndef _WENIX_TYPE_H
 #define _WENIX_TYPE_H
 
-typedef unsigned            uint32;
-typedef unsigned            uint16;
+typedef unsigned int        uint32;
+typedef unsigned short int  uint16;
 typedef unsigned char       uint8;
 
-#pragma pack(1)
+//#pragma pack(1)
 /* 描述符类型定义 */
 struct desc_t
 {
@@ -26,6 +26,6 @@ struct gate_t
     uint8 attr;
     uint16 offset_high;
 };
-#pragma pack()
+//#pragma pack()
 
 #endif /* _WENIX_TYPE_H */

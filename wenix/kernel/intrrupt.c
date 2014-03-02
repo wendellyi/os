@@ -1,14 +1,14 @@
 #include <wenix/type.h>
 #include <wenix/const.h>
 #include <wenix/irq.h>
-#include <asm/system.h>
+#include <wenix/system.h>
 
 extern struct gate_t idt[NR_IDT];
 
 static void set_gate(uint8 vector, uint8 type, uint8 dpl, void(* handler) (void))
 {
     struct gate_t* gate = &idt[vector];
-    uint32 base = (uint32)handler;
+    uint32 base = (uint32)(long)handler;
 
     gate->offset_low    = base & 0xffff;
     gate->selector      = SELECTOR_KERNEL_CS;
