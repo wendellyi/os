@@ -4,6 +4,8 @@ ENTRY_POINT := 0x30400
 LD := ld
 LD_FLAGS = -m elf_i386 -s -Ttext $(ENTRY_POINT)
 
+sub_dirs = kernel lib boot
+
 all: boot.bin kernel.bin
 	dd of=$(OUT_PUT) if=boot.bin bs=512 count=1
 	dd of=$(OUT_PUT) if=loader.bin bs=512 seek=1
@@ -29,6 +31,6 @@ kernel.a:
 	
 clean:
 	rm -fr *.bin *.o *.a *.img
-	$(MAKE) clean -C kernel
-	$(MAKE) clean -C lib
-	$(MAKE) clean -C boot
+	for dir in $(sub_dirs); \
+	do $(MAKE) clean -C $$dir; \
+	done

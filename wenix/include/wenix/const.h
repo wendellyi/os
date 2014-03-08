@@ -3,8 +3,12 @@
 
 #define NR_GDT                  6
 #define NR_IDT                  256
+#define NR_TASK                 64
 
 #define SELECTOR_KERNEL_CS      8
+
+#define FIRST_TSS_ENTRY         4                       /* 初始状态只用了前面4个，所以够用 */
+#define FIRST_LDT_ENTRY         (FIRST_TSS_ENTRY+1)
 
 #define DA_DPL0                 0x00
 #define DA_DPL3                 0x60

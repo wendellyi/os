@@ -10,8 +10,11 @@
  
 #include <wenix/type.h>
 #include <wenix/const.h>
+#include <wenix/sched.h>
 
 struct desc_t gdt[NR_GDT];              /* gdt 数组 */
 struct gate_t idt[NR_IDT];              /* idt 数组 */
 uint8 gdt_ptr[6];
 uint8 idt_ptr[6];
+
+struct task_struct task_table[NR_TASK];

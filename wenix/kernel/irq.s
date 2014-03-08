@@ -46,7 +46,7 @@ global  hwint15
 
 align 16
 hwint00:
-    hwint_master 0
+    iretd
 
 align 16
 hwint01:
